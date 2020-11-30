@@ -20,6 +20,7 @@ class App extends Component {
     largeImage: '',
     img: [],
     isLoading: false,
+    error: null,
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -52,13 +53,15 @@ class App extends Component {
     axios
       .get(URL)
       .then(res => {
+        console.log(res.data.hits);
         this.setState(prevState=>({
           img: [...prevState.img, ...res.data.hits],
           page: prevState.page + 1,
         }))
       })
       .then(() => { if (this.state.page > 2) this.scroll() })
-      .finally(()=>{this.setState({isLoading: false})})
+      .catch(error=> {this.setState({error})})
+      .finally(() => {this.setState({ isLoading: false })})
   }
 
   toggleModal = () => {
@@ -66,13 +69,14 @@ class App extends Component {
   }
 
   render() {
-    const { isLoading, img, largeImage, isOpenModal } = this.state;
+    const { isLoading, img, largeImage, isOpenModal, error } = this.state;
     const moreButton = img.length > 0 && !isLoading;
-    
+
     return (
       <div className='App'>
-        <Searchbar onSubmit={this.getQuery}/>
-        {isOpenModal && <Modal onClose={this.toggleModal} img={largeImage}/>}
+        <Searchbar onSubmit={this.getQuery} />
+        {error &&(<p color="red">Please enter another request</p>)}
+        {isOpenModal && <Modal onClose={this.toggleModal} img={largeImage} />}
         {img.length > 0 ? (
           <ImageGallery>
             <ImageGalleryItem getLargeImage={this.getLargeImage} img={img} />
