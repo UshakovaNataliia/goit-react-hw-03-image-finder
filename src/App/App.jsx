@@ -26,7 +26,7 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevState.query !== this.state.query) {
       this.axiosPictures();
-    }
+    };
   }
 
   getLargeImage = image => {
@@ -53,15 +53,15 @@ class App extends Component {
     axios
       .get(URL)
       .then(res => {
-        console.log(res.data.hits);
-        this.setState(prevState=>({
+        this.setState(prevState => ({
           img: [...prevState.img, ...res.data.hits],
           page: prevState.page + 1,
-        }))
+        }));
       })
       .then(() => { if (this.state.page > 2) this.scroll() })
       .catch(error=> {this.setState({error})})
-      .finally(() => {this.setState({ isLoading: false })})
+      .finally(() => { this.setState({ isLoading: false }) })
+    
   }
 
   toggleModal = () => {
